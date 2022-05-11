@@ -111,6 +111,7 @@ export const Room = () => {
         </div>
         <form onSubmit={handleSendQuestion}>
           <textarea
+            spellCheck="false"
             autoFocus
             maxLength={100}
             onChange={(event) => setNewQuestion(event.target.value)}
