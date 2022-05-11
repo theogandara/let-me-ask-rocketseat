@@ -49,11 +49,13 @@
         border-radius: 8px;
         background: #fefefe;
         box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+        border: 2px solid #a9a9a9;
         resize: vertical;
+        max-height: 180px;
 
-        :focus {
-          border: 0;
-        }
+        font-size: 18px;
+        color: #29292e;
+        outline: none;
       }
 
       .form-footer {

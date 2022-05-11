@@ -11,16 +11,59 @@ type RoomParams = {
   id: string;
 };
 
+type FirebaseQuestions = Record<
+  string,
+  {
+    id: string;
+    content: string;
+    author: {
+      name: string;
+      avatar: string;
+    };
+    isHighlighted: boolean;
+    isAnswered: boolean;
+  }
+>;
+
+type Questions = {
+  content: string;
+  author: {
+    name: string;
+    avatar: string;
+  };
+  isHighlighted: boolean;
+  isAnswered: boolean;
+};
+
 export const Room = () => {
   const { user } = useAuth();
   const params = useParams<RoomParams>();
   const roomId = params.id;
+  const [questions, setQuestions] = useState<Questions[]>([]);
+  const [titleRoom, setTitleRoom] = useState();
 
   useEffect(() => {
     const roomRef = database.ref(`rooms/${roomId}`);
 
-    roomRef.once("value", (room) => {
-      console.log(room.val());
+    roomRef.on("value", (room) => {
+      const databaseRoom = room.val();
+
+      const firebaseQuestions: FirebaseQuestions = databaseRoom.questions;
+
+      const parsedQuestions = Object.entries(firebaseQuestions ?? {}).map(
+        ([key, value]) => {
+          return {
+            id: key,
+            content: value.content,
+            author: value.author,
+            isHighlighted: value.isHighlighted,
+            isAnswered: value.isAnswered,
+          };
+        }
+      );
+
+      setQuestions(parsedQuestions);
+      setTitleRoom(databaseRoom.title);
     });
   }, [roomId]);
 
@@ -63,15 +106,21 @@ export const Room = () => {
 
       <main>
         <div className="room-title">
-          <h1>Sala React</h1>
-          <span>4 perguntas</span>
+          <h1>{titleRoom}</h1>
+          {questions.length > 0 && <span>{questions.length} pergunta(s)</span>}
         </div>
         <form onSubmit={handleSendQuestion}>
           <textarea
+            autoFocus
+            maxLength={100}
             onChange={(event) => setNewQuestion(event.target.value)}
             value={newQuestion}
-            placeholder="oq vc quer perguntar"
+            placeholder="Faça sua pergunta !!"
           />
+
+          {questions.map((question) => (
+            <div key={question.content}>{question.content}</div>
+          ))}
 
           <div className="form-footer">
             {!user ? (
