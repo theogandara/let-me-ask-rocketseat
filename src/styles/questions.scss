@@ -1,0 +1,23 @@
+.question {
+  margin-top: 24px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+}
+
+.img-perfil {
+  width: 60px;
+  border-radius: 50%;
+  border: solid #dedede 1px;
+  margin-right: 16px;
+
+  &:hover {
+    border: #fff;
+  }
+}
+
+.text {
+  font-weight: 100;
+  font-size: 16px;
+  color: black;
+}

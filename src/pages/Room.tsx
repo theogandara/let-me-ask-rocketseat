@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import { FormEvent, useEffect, useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { database } from "../services/firebase";
+import { Questions } from "../components/Questions";
 
 type RoomParams = {
   id: string;
@@ -25,7 +26,8 @@ type FirebaseQuestions = Record<
   }
 >;
 
-type Questions = {
+type QuestionsType = {
+  id: string;
   content: string;
   author: {
     name: string;
@@ -39,7 +41,7 @@ export const Room = () => {
   const { user } = useAuth();
   const params = useParams<RoomParams>();
   const roomId = params.id;
-  const [questions, setQuestions] = useState<Questions[]>([]);
+  const [questions, setQuestions] = useState<QuestionsType[]>([]);
   const [titleRoom, setTitleRoom] = useState();
 
   useEffect(() => {
@@ -63,6 +65,7 @@ export const Room = () => {
       );
 
       setQuestions(parsedQuestions);
+      console.log(parsedQuestions);
       setTitleRoom(databaseRoom.title);
     });
   }, [roomId]);
@@ -120,7 +123,11 @@ export const Room = () => {
           />
 
           {questions.map((question) => (
-            <div key={question.content}>{question.content}</div>
+            <Questions
+              id={question.id}
+              content={question.content}
+              author={question.author}
+            />
           ))}
 
           <div className="form-footer">
