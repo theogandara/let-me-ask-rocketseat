@@ -14,7 +14,7 @@ export const Home = () => {
   const { user, signInWithGoogle } = useAuth();
   const [roomCode, setCodeRoom] = useState("");
 
-  const handleCreateRomm = async () => {
+  const handleCreateRoom = async () => {
     if (!user) {
       await signInWithGoogle();
     }
@@ -40,24 +40,30 @@ export const Home = () => {
   return (
     <div id="page-auth">
       <aside>
-        <img src={illustrationImg} alt="ilustração" />
+        <img
+          src={illustrationImg}
+          alt="Ilustração simbolizando perguntas e respostas"
+        />
         <strong>Crie salas de Q&amp;A ao-vivo</strong>
         <p>Tire as dúvidas da sua audiência em tempo-real</p>
       </aside>
+
       <main>
         <div className="main-content">
-          <img src={logoImg} alt="logo" />
-          <button onClick={handleCreateRomm} className="create-room">
-            <img src={googleImage} alt="Google" />
+          <img src={logoImg} alt="Letmeask" />
+          <button onClick={handleCreateRoom} className="create-room">
+            <img src={googleImage} alt="Logo do Google" />
             Crie sua sala com o Google
           </button>
+
           <div className="separator">ou entre em uma sala</div>
+
           <form onSubmit={handleJoinRoom}>
             <input
-              onChange={(event) => setCodeRoom(event.target.value)}
               type="text"
-              value={roomCode}
               placeholder="Digite o código da sala"
+              onChange={(event) => setCodeRoom(event.target.value)}
+              value={roomCode}
             />
             <Button type="submit">Entrar na sala</Button>
           </form>
