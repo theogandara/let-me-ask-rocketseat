@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useEffect, useState } from "react";
+import React, { createContext, ReactNode, useEffect, useState } from "react";
 import { auth, firebase } from "../services/firebase";
 
 type User = {
@@ -7,10 +7,10 @@ type User = {
   avatar: string;
 };
 
-interface AuthContextType {
+type AuthContextType = {
   user: User | undefined;
   signInWithGoogle: () => Promise<void>;
-}
+};
 
 type AuthContextProviderProps = {
   children: ReactNode;
@@ -18,7 +18,7 @@ type AuthContextProviderProps = {
 
 export const AuthContext = createContext({} as AuthContextType);
 
-export const AuthContextProvider = (props: AuthContextProviderProps) => {
+export function AuthContextProvider(props: AuthContextProviderProps) {
   const [user, setUser] = useState<User>();
 
   useEffect(() => {
@@ -31,8 +31,8 @@ export const AuthContextProvider = (props: AuthContextProviderProps) => {
         }
 
         setUser({
-          name: displayName,
           id: uid,
+          name: displayName,
           avatar: photoURL,
         });
       }
@@ -41,9 +41,9 @@ export const AuthContextProvider = (props: AuthContextProviderProps) => {
     return () => {
       unsubscribe();
     };
-  }, []);
+  }, [user]);
 
-  const signInWithGoogle = async () => {
+  async function signInWithGoogle() {
     const provider = new firebase.auth.GoogleAuthProvider();
 
     const result = await auth.signInWithPopup(provider);
@@ -56,16 +56,15 @@ export const AuthContextProvider = (props: AuthContextProviderProps) => {
       }
 
       setUser({
-        name: displayName,
         id: uid,
+        name: displayName,
         avatar: photoURL,
       });
     }
-  };
-
+  }
   return (
-    <AuthContext.Provider value={{ user, signInWithGoogle}}>
+    <AuthContext.Provider value={{ user, signInWithGoogle }}>
       {props.children}
     </AuthContext.Provider>
   );
-};
+}
